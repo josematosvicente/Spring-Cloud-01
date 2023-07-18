@@ -1,0 +1,843 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Swagger Microservices Bank
+  description: Microservices Bank
+  termsOfService: http://swagger.io/terms/
+  contact:
+    name: Swagger API Team
+    email: apiteam@swagger.io
+    url: http://swagger.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+  - url: http://clientstore.swagger.io/api
+paths:
+  /clients:
+    get:
+      tags:
+        - CLIENT
+      summary: Returns all clients from the system that the user has access to
+      description: Returns all clients from the system that the user has access to
+      operationId: findClients
+      responses:
+        '200':
+          description: client response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClientDto'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    post:
+      tags:
+        - CLIENT
+      summary: Creates a new client in the bank.  Duplicates are not allowed
+      description: Creates a new client in the bank.  Duplicates are not allowed
+      operationId: addClient
+      requestBody:
+        description: ClientDto to add to the bank
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewClientDto'
+      responses:
+        '200':
+          description: client response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDto'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /clients/{id}:
+    get:
+      tags:
+        - CLIENT
+      summary: Returns a user based on a single ID, if the user does not have access to the client
+      description: Returns a user based on a single ID, if the user does not have access to the client
+      operationId: find client by id
+      parameters:
+        - name: id
+          in: path
+          description: ID of client to fetch
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: client response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDto'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    put:
+      tags:
+        - CLIENT
+      summary: Update client
+      description: This can only be done by the logged in client.
+      operationId: updateClient
+      parameters:
+        - name: id
+          in: path
+          description: ID of product to fetch
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent product
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewClientDto'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/NewClientDto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NewClientDto'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientDto'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Client not found
+        '405':
+          description: Validation exception
+    delete:
+      tags:
+        - CLIENT
+      summary: deletes a single client based on the ID supplied
+      description: deletes a single client based on the ID supplied
+      operationId: deleteClient
+      parameters:
+        - name: id
+          in: path
+          description: ID of client to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: client deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+
+  /products:
+    get:
+      tags:
+        - PRODUCT
+      summary: Returns all products from the system that the user has access to
+      description: Returns all products from the system that the user has access to
+      operationId: findProducts
+      responses:
+        '200':
+          description: Product response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductDto'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    post:
+      tags:
+        - PRODUCT
+      summary: Creates a new product in the bank.  Duplicates are not allowed
+      description: Creates a new product in the bank.  Duplicates are not allowed
+      operationId: addProduct
+      requestBody:
+        description: Product to add to the store
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewProductDto'
+      responses:
+        '200':
+          description: product response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDto'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /products/{id}:
+    get:
+      tags:
+        - PRODUCT
+      summary: Returns a product based on a single ID
+      description: Returns a product based on a single ID
+      operationId: find product by id
+      parameters:
+        - name: id
+          in: path
+          description: ID of product to fetch
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: product response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDto'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    put:
+      tags:
+        - PRODUCT
+      summary: Update product
+      description: This can only be done by the logged in product.
+      operationId: updateProduct
+      parameters:
+        - name: id
+          in: path
+          description: ID of product to fetch
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent product
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewProductDto'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/NewProductDto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NewProductDto'
+      responses:
+        default:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductDto'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/ProductDto'
+        '400':
+          description: Invalid ID supplied
+        '404':
+          description: Product not found
+        '405':
+          description: Validation exception
+    delete:
+      tags:
+        - PRODUCT
+      summary: deletes a single product based on the ID supplied
+      description: deletes a single product based on the ID supplied
+      operationId: deleteProduct
+      parameters:
+        - name: id
+          in: path
+          description: ID of product to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: product deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+
+  /administrative/accounts:
+    get:
+      tags:
+        - ADMINISTRATIVE
+      summary: Returns all accounts of bank
+      description: Returns all accounts of bank
+      operationId: findAccounts
+      responses:
+        '200':
+          description: Account response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AdministrativeAccountDto'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    post:
+      tags:
+        - ADMINISTRATIVE
+      summary: Creates a new account in the bank.  Duplicates are not allowed
+      description: Creates a new account in the bank.  Duplicates are not allowed
+      operationId: addAccount
+      requestBody:
+        description: Account to add to the bank
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewAdministrativeAccountDto'
+      responses:
+        '200':
+          description: account response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdministrativeAccountDto'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /administrative/accounts/{id}:
+    get:
+      tags:
+        - ADMINISTRATIVE
+      summary: Returns a account based on a single ID
+      description: Returns a account based on a single ID
+      operationId: find account by id
+      parameters:
+        - name: id
+          in: path
+          description: ID of account to fetch
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: account response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AdministrativeAccountDto'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    put:
+      tags:
+        - ADMINISTRATIVE
+      summary: Update account
+      description: This can only be done by the logged in account.
+      operationId: updateAccount
+      parameters:
+        - name: id
+          in: path
+          description: ID of account to fetch
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent account
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdministrativeAccountDto'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/AdministrativeAccountDto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AdministrativeAccountDto'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - ADMINISTRATIVE
+      summary: deletes a single account based on the ID supplied
+      description: deletes a single account based on the ID supplied
+      operationId: deleteAccount
+      parameters:
+        - name: id
+          in: path
+          description: ID of account to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: account deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+
+  /administrative/credit:
+    get:
+      tags:
+        - ADMINISTRATIVE
+      summary: Returns all credits from the system bank
+      description: Returns all credits from the system bank
+      operationId: findCredits
+      responses:
+        '200':
+          description: Credit response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CreditDto'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    post:
+      tags:
+        - ADMINISTRATIVE
+      summary: Creates a new credit in the bank.  Duplicates are not allowed
+      description: Creates a new credit in the bank.  Duplicates are not allowed
+      operationId: addCredit
+      requestBody:
+        description: Credit to add to the bank
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewCreditDto'
+      responses:
+        '200':
+          description: credit response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditDto'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /administrative/credit/{id}:
+    get:
+      tags:
+        - ADMINISTRATIVE
+      summary: Returns a credit based on a single ID
+      description: Returns a credit based on a single ID
+      operationId: find credit by id
+      parameters:
+        - name: id
+          in: path
+          description: ID of credit to fetch
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: credit response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreditDto'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+    put:
+      tags:
+        - ADMINISTRATIVE
+      summary: Update credit
+      description: This can only be done by the logged in credit.
+      operationId: updateCredit
+      parameters:
+        - name: id
+          in: path
+          description: ID of credit to fetch
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent credit
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreditDto'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/CreditDto'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/CreditDto'
+      responses:
+        default:
+          description: successful operation
+    delete:
+      tags:
+        - ADMINISTRATIVE
+      summary: deletes a single credit based on the ID supplied
+      description: deletes a single credit based on the ID supplied
+      operationId: deleteCredit
+      parameters:
+        - name: id
+          in: path
+          description: ID of credit to delete
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: credit deleted
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+
+  /finantial/account/{id}/movement:
+    post:
+      tags:
+        - FINANTIAL
+      summary: Deposit or withdrawal operations
+      description: Deposit or withdrawal operations.  Duplicates are not allowed
+      operationId: movement
+      parameters:
+        - name: id
+          in: path
+          description: ID of account to movement
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Deposit or withdrawal operations
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovementDto'
+      responses:
+        '200':
+          description: Account response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /finantial/credit/{id}/movement:
+    post:
+      tags:
+        - FINANTIAL
+      summary: Deposit or withdrawal operations
+      description: Deposit or withdrawal operations.  Duplicates are not allowed
+      operationId: movement-credit
+      parameters:
+        - name: id
+          in: path
+          description: ID of account to movement
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Deposit or withdrawal operations
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MovementDto'
+      responses:
+        '200':
+          description: Account response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /finantial/account/{id}/balance:
+    post:
+      tags:
+        - FINANTIAL
+      summary: Deposit or withdrawal operations
+      description: Deposit or withdrawal operations.  Duplicates are not allowed
+      operationId: balance-account
+      parameters:
+        - name: id
+          in: path
+          description: ID of account to movement
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Deposit or withdrawal operations
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountDto'
+      responses:
+        '200':
+          description: Account response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+  /finantial/credit/{id}/balance:
+    post:
+      tags:
+        - FINANTIAL
+      summary: Deposit or withdrawal operations
+      description: Deposit or withdrawal operations.  Duplicates are not allowed
+      operationId: balance-credit
+      parameters:
+        - name: id
+          in: path
+          description: ID of account to movement
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Deposit or withdrawal operations
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountDto'
+      responses:
+        '200':
+          description: Account response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDto'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDto'
+components:
+  schemas:
+    ClientDto:
+      allOf:
+        - $ref: '#/components/schemas/NewClientDto'
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: "string"
+
+    NewClientDto:
+      allOf:
+        - type: object
+          required:
+            - id
+          properties:
+            first_name:
+              type: "string"
+            last_name:
+              type: "string"
+            type:
+              type: "string"
+    ProductDto:
+      allOf:
+        - $ref: '#/components/schemas/NewProductDto'
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: "string"
+
+    NewProductDto:
+      allOf:
+        - type: object
+          required:
+            - id
+          properties:
+            name:
+              type: "string"
+            type:
+              type: "string"
+            category:
+              type: "string"
+            commission:
+              type: "number"
+              format: "double"
+            limitDeposit:
+              type: "number"
+              format: "double"
+            limitWithdrawal:
+              type: "number"
+              format: "double"
+            line:
+              type: "number"
+              format: "double"
+    MovementDto:
+      allOf:
+        - type: object
+          properties:
+            type:
+              type: "string"
+            amount:
+              type: "number"
+              format: "double"
+              minimum: 0
+    AccountDto:
+      allOf:
+        - type: object
+          properties:
+            balance:
+              type: "number"
+              format: "double"
+
+    AccountProductDto:
+      allOf:
+        - $ref: '#/components/schemas/NewAccountProductDto'
+        - type: object
+          properties:
+            id:
+              type: "string"
+
+    NewAccountProductDto:
+      allOf:
+        - type: object
+          properties:
+            id_client:
+              type: "string"
+            product:
+              $ref: '#/components/schemas/ProductDto'
+            balance:
+              type: "number"
+              format: "double"
+
+    CreditProductDto:
+      allOf:
+        - $ref: '#/components/schemas/NewCreditProductDto'
+        - type: object
+          properties:
+            id:
+              type: "string"
+
+    NewCreditProductDto:
+      allOf:
+        - type: object
+          properties:
+            id_client:
+              type: "string"
+            id_product:
+              type: "string"
+            balance:
+              type: "number"
+              format: "double"
+
+    AdministrativeAccountDto:
+      allOf:
+        - $ref: "#/components/schemas/AccountProductDto"
+        - type: object
+          properties:
+            id:
+              type: "string"
+            clientList:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/ClientDto"
+    NewAdministrativeAccountDto:
+      allOf:
+        - $ref: "#/components/schemas/NewAccountProductDto"
+        - type: "object"
+          properties:
+            clientList:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/NewClientDto"
+    CreditDto:
+      allOf:
+        - $ref: "#/components/schemas/CreditProductDto"
+        - type: object
+          properties:
+            clientList:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/ClientDto"
+                
+
+    NewCreditDto:
+      allOf:
+        - $ref: "#/components/schemas/NewCreditProductDto"
+        - type: object
+          properties:
+            clientList:
+              type: "array"
+              items:
+                $ref: "#/components/schemas/NewClientDto"
+
+    ErrorDto:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
